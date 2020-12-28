@@ -1,7 +1,7 @@
 FROM debian:stable-slim
 MAINTAINER rhessing
 
-ENV DOWNLOAD_URL="https://github.com/ideawu/ssdb/archive/master.zip"
+ENV DOWNLOAD_URL="https://github.com/rhessing/ssdb/archive/master.zip"
 
 # Basics
 RUN apt-get -y update && \
@@ -15,14 +15,16 @@ RUN apt-get -y update && \
   ln -fsn /usr/local/ssdb/ssdb-bench /bin/ssdb-bench && \
   ln -fsn /usr/local/ssdb/ssdb-dump /bin/ssdb-dump && \
   ln -fsn /usr/local/ssdb/ssdb-repair /bin/ssdb-repair && \
-  ln -fsn /usr/local/ssdb/leveldb-import /bin/leveldb-import
+  ln -fsn /usr/local/ssdb/leveldb-import /bin/leveldb-import && \
+  cd
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/docker-entrypoint.sh
 
 # clean up
-RUN cd && rm -rf /ssdb-master /master.zip && \
+RUN rm -rf /ssdb-master /master.zip && \
   rm -f /usr/local/ssdb/Makefile && \
+  rm -f * && \
   apt-get purge -y unzip wget make autoconf g++ && \
   apt-get autoremove -y && \
   apt-get clean -y
